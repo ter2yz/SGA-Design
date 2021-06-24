@@ -26,6 +26,7 @@ export default function SectionMap() {
                 y: -20
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [intersection])
 
     return (

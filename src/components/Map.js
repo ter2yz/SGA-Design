@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import ReactMapGL, { FlyToInterpolator, WebMercatorViewport, Marker, Popup } from 'react-map-gl'
+import ReactMapGL, { FlyToInterpolator, WebMercatorViewport, Marker } from 'react-map-gl'
 import mapboxgl from 'mapbox-gl'
 import _ from 'lodash'
 
@@ -58,6 +58,7 @@ export default function Map() {
             });
             setLoading(false)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sites])
 
     useEffect(() => {
@@ -67,7 +68,7 @@ export default function Map() {
                     console.error(errors)
                 } else {
                     const items = data.mapMarkersCollection.items;
-                    items.map(item => {
+                    items.forEach(item => {
                         setSites(prevState => ([
                             ...prevState,
                             {
@@ -90,7 +91,7 @@ export default function Map() {
         } else {
             setIsTablet(false)
         }
-    }, [])
+    }, [breakpoint])
 
     useEffect(() => {
         if (isEnterMarker) {
