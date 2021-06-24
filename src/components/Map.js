@@ -10,13 +10,20 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import '../css/transition.css'
 
 import { fetchMarkersJSON } from '../data/MapMarkers'
+import MapPopup from './MapPopup'
+
+import { createBreakpoint } from 'react-use'
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
 mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
+const useBreakpoint = createBreakpoint();
 
 export default function Map() {
 
     const [sites, setSites] = useState([])
+    const [isTablet, setIsTablet] = useState(false)
+
+    const breakpoint = useBreakpoint()
 
     const [viewport, setViewport] = useState({
         latitude: -37.8513957458897,
@@ -78,6 +85,14 @@ export default function Map() {
     }, [])
 
     useEffect(() => {
+        if (breakpoint !== "laptopL" || breakpoint !== "laptopL") {
+            setIsTablet(true)
+        } else {
+            setIsTablet(false)
+        }
+    }, [])
+
+    useEffect(() => {
         if (isEnterMarker) {
             setSelectMarker(null);
         }
@@ -100,6 +115,8 @@ export default function Map() {
                 onViewportChange={viewport => {
                     setViewport(viewport)
                 }}
+                dragPan={!isTablet}
+                scrollZoom={!isTablet}
             >
 
                 {
@@ -136,35 +153,14 @@ export default function Map() {
                             timeout={300}
                             classNames="item"
                         >
-                            <Popup
+                            <MapPopup
                                 latitude={selectedMarker.latitude}
                                 longitude={selectedMarker.longitude}
-                                closeButton={false}
-                                offsetTop={5}
-                                onClose={() => {
-                                    setSelectMarker(null);
-                                }}
-                                closeOnClick={true}
-                                sortByDepth={true}
-                                dynamicPosition={true}
-                                className="rounded-lg popup-transparent cursor-auto"
-                            >
-                                <div className="flex flex-col items-center max-w-sm py-3 px-4">
-                                    <div className="mb-4 w-full h-32 bg-red-100 rounded-xl shadow-lg bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${selectedMarker.img})` }}></div>
-                                    <h2 className="mb-1 text-xl font-semibold">{selectedMarker.label}</h2>
-                                    <p className="mb-2 text-sm font-light line-clamp-3">{selectedMarker.description}</p>
-                                    <button className="bg-gray-700 px-4 py-1 text-white text-xs font-light rounded-md uppercase transition duration-200 hover:bg-gray-900">View More</button>
-                                </div>
-
-                                <button
-                                    className="w-5 h-5 absolute top-1 right-1 text-gray-900 flex justify-center items-center cursor-pointer hover:text-black focus:outline-none"
-                                    onClick={() => {
-                                        setSelectMarker(null);
-                                    }}
-                                >
-                                    <span className="text-md">x</span>
-                                </button>
-                            </Popup>
+                                label={selectedMarker.label}
+                                description={selectedMarker.description}
+                                imgUrl={selectedMarker.img}
+                                handleClose={setSelectMarker}
+                            />
                         </CSSTransition>
                     ) : null}
 
