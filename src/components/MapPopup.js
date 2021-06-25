@@ -13,7 +13,7 @@ export default function MapPopup({ handleClose, latitude, longitude, label, desc
                 handleClose(null);
             }}
             closeOnClick={true}
-            sortByDepth={true}
+            sortByDepth={false}
             dynamicPosition={true}
             className="rounded-lg popup-transparent cursor-auto"
         >

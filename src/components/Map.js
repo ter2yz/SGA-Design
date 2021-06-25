@@ -42,7 +42,7 @@ export default function Map() {
             const bounds = [[_.maxBy(sites, 'longitude').longitude, _.minBy(sites, 'latitude').latitude], [_.minBy(sites, 'longitude').longitude, _.maxBy(sites, 'latitude').latitude]]
             const width = viewport.width
             const height = viewport.height
-            const { longitude, latitude, zoom } = new WebMercatorViewport({ ...viewport, ...{ width: 1000, height: 800 } })
+            const { longitude, latitude, zoom } = new WebMercatorViewport({ ...viewport, ...{ width: 600, height: 600 } })
                 .fitBounds(bounds, {
                     padding: 200,
                 });
@@ -140,6 +140,9 @@ export default function Map() {
                                         setWaitingMarker(site);
                                     }
                                 }}
+                                onClick={() => {
+                                    setSelectMarker(site)
+                                }}
                             >
                                 <img className="w-full transform -translate-x-1/2" src={MapMarker} alt="" />
                             </button>
@@ -149,7 +152,7 @@ export default function Map() {
 
 
                 <TransitionGroup>
-                    {selectedMarker ? (
+                    {selectedMarker && !isTablet ? (
                         <CSSTransition
                             timeout={300}
                             classNames="item"
